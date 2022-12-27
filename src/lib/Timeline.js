@@ -7,6 +7,7 @@ import Columns from './columns/Columns'
 import GroupRows from './row/GroupRows'
 import ScrollElement from './scroll/ScrollElement'
 import MarkerCanvas from './markers/MarkerCanvas'
+import LinkViewPort from './links/LinkViewPort'
 import windowResizeDetector from '../resize-detector/window'
 
 import {
@@ -26,7 +27,7 @@ import { TimelineStateProvider } from './timeline/TimelineStateContext'
 import { TimelineMarkersProvider } from './markers/TimelineMarkersContext'
 import { TimelineHeadersProvider } from './headers/HeadersContext'
 import TimelineHeaders from './headers/TimelineHeaders'
-import DateHeader from './headers/DateHeader'
+import DateHeader from './headers/DateHeader';
 
 export default class ReactCalendarTimeline extends Component {
   static propTypes = {
@@ -121,10 +122,13 @@ export default class ReactCalendarTimeline extends Component {
 
     verticalLineClassNamesForTime: PropTypes.func,
 
-    children: PropTypes.node
+    children: PropTypes.node,
+
+    links:PropTypes.oneOfType([PropTypes.array, PropTypes.object])
   }
 
   static defaultProps = {
+    links:[],
     sidebarWidth: 150,
     rightSidebarWidth: 0,
     dragSnap: 1000 * 60 * 15, // 15min
@@ -813,6 +817,16 @@ export default class ReactCalendarTimeline extends Component {
     )
   }
 
+  links(){
+    return(
+          <LinkViewPort
+            data={this.props.items}           
+            links={this.props.links}
+            // selectedItem={this.props.selectedItem}
+          />
+    )
+  }
+
   handleHeaderRef = el => {
     this.scrollHeaderRef = el
     this.props.headerRef(el)
@@ -1081,7 +1095,7 @@ export default class ReactCalendarTimeline extends Component {
               </div>
             </div>
           </TimelineHeadersProvider>
-        </TimelineMarkersProvider>
+        </TimelineMarkersProvider>        
       </TimelineStateProvider>
     )
   }
